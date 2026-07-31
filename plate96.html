@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>96 孔板标记 · LabTools</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230e7a8a'/><circle cx='16' cy='16' r='6' fill='white'/></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-mark"><span></span><span></span><span></span><span></span></span>
+        LabTools
+      </a>
+      <nav class="site-nav">
+        <a href="index.html">首页</a>
+        <a href="plate96.html" class="active">96孔板</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <h1>96 孔板标记</h1>
+      <p class="sub">点击孔位即可标记内容，数据自动保存在浏览器本地。多块板可分别命名管理。</p>
+    </section>
+
+    <div class="plate-toolbar">
+      <div class="plate-select">
+        <select id="plateList" title="切换实验板"></select>
+        <button class="btn ghost" id="addPlateBtn" title="新建实验板">＋ 新建板</button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索孔内容，如：样品、BSA、PBS…" autocomplete="off">
+      </div>
+      <button class="btn ghost" id="exportBtn">导出 CSV</button>
+      <button class="btn danger" id="clearBtn">清空本板</button>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <div class="plate-wrap">
+      <div class="plate" id="plate"></div>
+      <div class="stats" id="stats"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">LabTools · 本地数据仅保存在浏览器中</div>
+  </footer>
+
+  <div class="modal-mask" id="modalMask">
+    <div class="modal">
+      <h3 id="modalTitle">标记孔位</h3>
+      <p class="well-id" id="modalWellId"></p>
+      <div class="form-field">
+        <label>标记类型</label>
+        <div class="type-options" id="typeOptions"></div>
+      </div>
+      <div class="form-field">
+        <label>孔内容（可留空）</label>
+        <input type="text" id="wellNote" placeholder="如：细胞A / 100ng BSA / PBS…" autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="clearWellBtn">清除标记</button>
+        <button class="btn ghost" id="modalCancel">取消</button>
+        <button class="btn" id="modalSave">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/plate96.js"></script>
+</body>
+</html>
