@@ -1,5 +1,6 @@
 .arts/
 .codeartsdoer/
+.merkle-snapshot.json
 .DS_Store
 Thumbs.db
 *.log

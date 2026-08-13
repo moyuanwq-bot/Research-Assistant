@@ -29,6 +29,17 @@
   var wellNote = document.getElementById('wellNote');
   var editingWell = null;
 
+  var multiSelectBtn = document.getElementById('multiSelectBtn');
+  var selectionBar = document.getElementById('selectionBar');
+  var selectionInfo = document.getElementById('selectionInfo');
+  var batchEditBtn = document.getElementById('batchEditBtn');
+  var batchClearBtn = document.getElementById('batchClearBtn');
+  var clearSelectionBtn = document.getElementById('clearSelectionBtn');
+  var selected = {};
+  var multiSelectMode = false;
+  var batchMode = false;
+  var dragState = null;
+
   function defaultPlates() {
     return [{ id: 'default', name: '默认实验板', wells: {} }];
   }
@@ -104,7 +115,7 @@
         well.dataset.row = r;
         well.dataset.col = col;
         well.title = wellKey(r, col);
-        well.addEventListener('click', openEditor);
+        well.addEventListener('click', onWellClick);
         plateEl.appendChild(well);
       }
     }
@@ -128,6 +139,7 @@
       var key = wellKey(+wellEl.dataset.row, +wellEl.dataset.col);
       var data = wells[key];
       wellEl.className = 'well';
+      if (selected[key]) wellEl.classList.add('selected');
       if (data && data.type) {
         wellEl.classList.add('filled', data.type);
         wellEl.dataset.note = (data.note || '').slice(0, 6);
@@ -158,6 +170,135 @@
     renderPlateList();
     renderLegend();
     renderPlate();
+    renderSelection();
+  }
+
+  /* ---------- multi-select ---------- */
+
+  function selectedKeys() { return Object.keys(selected); }
+
+  function toggleSelect(key) {
+    if (selected[key]) delete selected[key];
+    else selected[key] = true;
+    renderSelection();
+    applyWellStyles();
+  }
+
+  function clearSelection() {
+    selected = {};
+    renderSelection();
+    applyWellStyles();
+  }
+
+  function renderSelection() {
+    var keys = selectedKeys();
+    selectionBar.hidden = !multiSelectMode;
+    selectionInfo.textContent = '已选中 ' + keys.length + ' 个孔';
+    updateSelectionButtons();
+  }
+
+  function updateSelectionButtons() {
+    var hasSelection = selectedKeys().length > 0;
+    batchEditBtn.disabled = !hasSelection;
+    batchClearBtn.disabled = !hasSelection;
+    clearSelectionBtn.disabled = !hasSelection;
+  }
+
+  function openBatchEditor() {
+    var keys = selectedKeys();
+    if (!keys.length) return;
+    batchMode = true;
+    editingWell = null;
+    modalTitle.textContent = '批量标记 ' + keys.length + ' 个孔';
+    modalWellId.textContent = '将统一设置选中孔的类型与内容（内容可留空）';
+    document.getElementById('clearWellBtn').textContent = '清除选中孔标记';
+    buildTypeOptions(TYPE_DEFS[0].id);
+    wellNote.value = '';
+    modalMask.classList.add('show');
+    setTimeout(function () { wellNote.focus(); }, 50);
+  }
+
+  /* ---------- drag select ---------- */
+
+  function createSelectRect() {
+    var rect = document.createElement('div');
+    rect.className = 'select-rect';
+    document.body.appendChild(rect);
+    return rect;
+  }
+
+  function updateSelectRect(rect, x1, y1, x2, y2) {
+    rect.style.left = Math.min(x1, x2) + 'px';
+    rect.style.top = Math.min(y1, y2) + 'px';
+    rect.style.width = Math.abs(x2 - x1) + 'px';
+    rect.style.height = Math.abs(y2 - y1) + 'px';
+  }
+
+  function onDragMove(ev) {
+    if (!dragState) return;
+    var dx = ev.clientX - dragState.startX;
+    var dy = ev.clientY - dragState.startY;
+    if (!dragState.moved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+      dragState.moved = true;
+      dragState.base = dragState.additive ? Object.keys(selected).reduce(function (o, k) { o[k] = true; return o; }, {}) : {};
+    }
+    if (!dragState.moved) return;
+
+    updateSelectRect(dragState.rectEl, dragState.startX, dragState.startY, ev.clientX, ev.clientY);
+
+    var x1 = Math.min(dragState.startX, ev.clientX);
+    var x2 = Math.max(dragState.startX, ev.clientX);
+    var y1 = Math.min(dragState.startY, ev.clientY);
+    var y2 = Math.max(dragState.startY, ev.clientY);
+
+    var next = {};
+    Object.keys(dragState.base).forEach(function (k) { next[k] = true; });
+    Array.prototype.forEach.call(plateEl.querySelectorAll('.well'), function (wellEl) {
+      var r = wellEl.getBoundingClientRect();
+      if (r.right >= x1 && r.left <= x2 && r.bottom >= y1 && r.top <= y2) {
+        next[wellKey(+wellEl.dataset.row, +wellEl.dataset.col)] = true;
+      }
+    });
+    selected = next;
+    renderSelection();
+    applyWellStyles();
+  }
+
+  function suppressNextClick() {
+    var handler = function (ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+    };
+    document.addEventListener('click', handler, true);
+    setTimeout(function () {
+      document.removeEventListener('click', handler, true);
+    }, 0);
+  }
+
+  function onDragEnd() {
+    if (!dragState) return;
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+    document.body.classList.remove('dragging');
+    if (dragState.moved) suppressNextClick();
+    if (dragState.rectEl && dragState.rectEl.parentNode) dragState.rectEl.parentNode.removeChild(dragState.rectEl);
+    dragState = null;
+  }
+
+  function onPlateMouseDown(ev) {
+    if (ev.button !== 0) return;
+    if (!multiSelectMode) return;
+    dragState = {
+      startX: ev.clientX,
+      startY: ev.clientY,
+      moved: false,
+      additive: ev.ctrlKey || ev.shiftKey || ev.metaKey,
+      base: {},
+      rectEl: createSelectRect()
+    };
+    document.body.classList.add('dragging');
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
   }
 
   /* ---------- editor modal ---------- */
@@ -177,14 +318,27 @@
     });
   }
 
+  function onWellClick(ev) {
+    var wellEl = ev.currentTarget;
+    var key = wellKey(+wellEl.dataset.row, +wellEl.dataset.col);
+    if (multiSelectMode) {
+      toggleSelect(key);
+      return;
+    }
+    clearSelection();
+    openEditor(ev);
+  }
+
   function openEditor(ev) {
     var wellEl = ev.currentTarget;
     var r = +wellEl.dataset.row, c = +wellEl.dataset.col;
     var key = wellKey(r, c);
     var data = getCurrent().wells[key] || {};
+    batchMode = false;
     editingWell = { key: key };
     modalTitle.textContent = '标记孔位 ' + key;
     modalWellId.textContent = '第 ' + (r + 1) + ' 行 · 第 ' + (c + 1) + ' 列';
+    document.getElementById('clearWellBtn').textContent = '清除标记';
     buildTypeOptions(data.type || TYPE_DEFS[0].id);
     wellNote.value = data.note || '';
     modalMask.classList.add('show');
@@ -194,9 +348,29 @@
   function closeModal() {
     modalMask.classList.remove('show');
     editingWell = null;
+    batchMode = false;
+  }
+
+  function selectedType() {
+    var typeEl = typeOptions.querySelector('.type-option.selected');
+    return typeEl ? typeEl.dataset.type : TYPE_DEFS[0].id;
   }
 
   function saveWell() {
+    if (batchMode) {
+      var type = selectedType();
+      var note = wellNote.value.trim();
+      var wells = getCurrent().wells;
+      Object.keys(selected).forEach(function (key) {
+        if (note) wells[key] = { type: type, note: note };
+        else wells[key] = { type: type };
+      });
+      savePlates();
+      closeModal();
+      clearSelection();
+      renderAll();
+      return;
+    }
     if (!editingWell) return;
     var typeEl = typeOptions.querySelector('.type-option.selected');
     var type = typeEl ? typeEl.dataset.type : TYPE_DEFS[0].id;
@@ -213,6 +387,15 @@
   }
 
   function clearWell() {
+    if (batchMode) {
+      var wells = getCurrent().wells;
+      Object.keys(selected).forEach(function (key) { delete wells[key]; });
+      savePlates();
+      closeModal();
+      clearSelection();
+      renderAll();
+      return;
+    }
     if (!editingWell) return;
     delete getCurrent().wells[editingWell.key];
     savePlates();
@@ -229,6 +412,7 @@
     plates.push(p);
     currentId = p.id;
     savePlates();
+    clearSelection();
     renderAll();
   }
 
@@ -236,6 +420,7 @@
     if (!confirm('确定要清空「' + getCurrent().name + '」的所有标记吗？')) return;
     getCurrent().wells = {};
     savePlates();
+    clearSelection();
     renderAll();
   }
 
@@ -265,12 +450,32 @@
 
   plateList.addEventListener('change', function () {
     currentId = plateList.value;
+    clearSelection();
     renderAll();
   });
 
   searchInput.addEventListener('input', function () {
     applyWellStyles();
   });
+
+  multiSelectBtn.addEventListener('click', function () {
+    multiSelectMode = !multiSelectMode;
+    multiSelectBtn.classList.toggle('active', multiSelectMode);
+    if (!multiSelectMode) clearSelection();
+    renderSelection();
+  });
+
+  batchEditBtn.addEventListener('click', openBatchEditor);
+  batchClearBtn.addEventListener('click', function () {
+    var wells = getCurrent().wells;
+    selectedKeys().forEach(function (key) { delete wells[key]; });
+    savePlates();
+    clearSelection();
+    renderAll();
+  });
+  clearSelectionBtn.addEventListener('click', clearSelection);
+
+  plateEl.addEventListener('mousedown', onPlateMouseDown);
 
   document.getElementById('addPlateBtn').addEventListener('click', addPlate);
   document.getElementById('clearBtn').addEventListener('click', clearCurrent);

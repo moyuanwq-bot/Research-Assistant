@@ -35,11 +35,19 @@
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="搜索孔内容，如：样品、BSA、PBS…" autocomplete="off">
       </div>
+      <button class="btn ghost" id="multiSelectBtn" title="开启后点击孔位可多选，也可直接拖动框选">☑ 多选模式</button>
       <button class="btn ghost" id="exportBtn">导出 CSV</button>
       <button class="btn danger" id="clearBtn">清空本板</button>
     </div>
 
     <div class="legend" id="legend"></div>
+
+    <div class="selection-bar" id="selectionBar" hidden>
+      <span class="selection-info" id="selectionInfo">已选中 0 个孔</span>
+      <button class="btn" id="batchEditBtn">批量标记</button>
+      <button class="btn ghost" id="batchClearBtn">清除选中孔标记</button>
+      <button class="btn ghost" id="clearSelectionBtn">取消选中</button>
+    </div>
 
     <div class="plate-wrap">
       <div class="plate" id="plate"></div>

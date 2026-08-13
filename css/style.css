@@ -267,6 +267,50 @@ body {
 
 .legend-count { color: var(--ink-soft); margin-left: 2px; }
 
+/* ---------- Selection bar ---------- */
+.selection-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  background: var(--brand-soft);
+  border: 1px solid #bfe0e2;
+  border-radius: 12px;
+}
+
+.selection-bar[hidden] { display: none; }
+
+.selection-info {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-right: auto;
+}
+
+.selection-bar .btn { padding: 7px 13px; }
+
+.btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+.btn.ghost.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+.btn:disabled,
+.btn.ghost:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover,
+.btn.ghost:disabled:hover {
+  filter: none;
+}
+
+.btn:disabled:active,
+.btn.ghost:disabled:active {
+  transform: none;
+}
+
 /* ---------- Plate grid ---------- */
 .plate-wrap {
   background: var(--paper);
@@ -283,6 +327,7 @@ body {
   gap: 7px;
   max-width: 880px;
   margin: 0 auto;
+  user-select: none;
 }
 
 .plate-label {
@@ -334,6 +379,26 @@ body {
 }
 
 .well.dim { opacity: .32; }
+
+.well.selected {
+  box-shadow: 0 0 0 3px var(--brand);
+  border-color: var(--ink);
+  transform: scale(1.08);
+}
+
+.select-rect {
+  position: fixed;
+  border: 1.5px dashed var(--brand);
+  background: rgba(14, 122, 138, .1);
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* 拖选期间禁用孔的缩放/过渡，避免 transform 改变 getBoundingClientRect 影响框选判定 */
+body.dragging .well {
+  transform: none !important;
+  transition: none !important;
+}
 
 /* ---------- Stats ---------- */
 .stats {
