@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "首页", href: "#home", active: true },
-  { label: "96 孔板标记", href: "plate96.html", active: false },
-  { label: "Excel 数据分析", href: "plate96-analyze.html", active: false },
 ] as const;
 
 function App() {

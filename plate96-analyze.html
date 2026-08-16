@@ -7,30 +7,31 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230e7a8a'/><circle cx='16' cy='16' r='6' fill='white'/></svg>">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <header class="site-header">
-    <div class="container">
-      <a href="index.html" class="logo">
-        <span class="logo-mark"><span></span><span></span><span></span><span></span></span>
-        LabTools
-      </a>
-      <nav class="site-nav">
-        <a href="index.html">首页</a>
-        <a href="plate96.html">96孔板</a>
-        <a href="plate96-analyze.html" class="active">Excel 分析</a>
-      </nav>
+<body class="tool-page analysis-page">
+  <section class="cinematic-shell">
+    <video class="scene-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+    <header class="site-header">
+      <div class="container">
+        <a href="index.html" class="logo" aria-label="LabTools 首页">
+          LabTools<sup>LAB</sup>
+        </a>
+        <a href="index.html" class="back-home">← 返回首页</a>
+      </div>
+    </header>
+    <div class="container cinematic-copy">
+      <p class="eyebrow">Time-series analysis</p>
+      <h1>让每一个时间点，<br>都讲清实验变化。</h1>
+      <p>导入吸光度数据，自动识别 8×12 区域，并生成热图、变化曲线和分析工作簿。</p>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
-    <section class="page-head">
-      <h1>96 孔板 Excel 分析</h1>
-      <p class="sub">导入多时间点吸光度 Excel，自动识别 8×12 数据区，生成热图与变化曲线并导出分析工作簿。数据全部在浏览器本地处理，不上传。</p>
-    </section>
+  <main class="container tool-workspace analysis-workspace">
 
     <!-- Step 1: 导入 -->
     <section class="panel" id="importPanel">
-      <h2>1 · 导入 Excel</h2>
+      <h2><span class="step-number">01</span><span>导入 Excel</span></h2>
       <div class="dropzone" id="dropzone">
         <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm,.csv" hidden>
         <p class="drop-title">点击选择，或把 Excel 拖到这里</p>
@@ -41,7 +42,7 @@
 
     <!-- Step 2: 识别与参数 -->
     <section class="panel" id="configPanel" hidden>
-      <h2>2 · 识别与参数</h2>
+      <h2><span class="step-number">02</span><span>识别与参数</span></h2>
       <div class="config-row">
         <label class="field-inline">
           检测波长
@@ -78,7 +79,7 @@
 
     <!-- Step 3: 孔位选择与预览 -->
     <section class="panel" id="previewPanel" hidden>
-      <h2>3 · 孔位选择与预览</h2>
+      <h2><span class="step-number">03</span><span>孔位选择与预览</span></h2>
 
       <div class="summary" id="summary"></div>
 
@@ -123,7 +124,7 @@
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer tool-footer">
     <div class="container">LabTools · 本地数据仅保存在浏览器中 · 解析与导出均在本地完成</div>
   </footer>
 

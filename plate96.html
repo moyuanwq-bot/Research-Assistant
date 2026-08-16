@@ -7,26 +7,27 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230e7a8a'/><circle cx='16' cy='16' r='6' fill='white'/></svg>">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <header class="site-header">
-    <div class="container">
-      <a href="index.html" class="logo">
-        <span class="logo-mark"><span></span><span></span><span></span><span></span></span>
-        LabTools
-      </a>
-      <nav class="site-nav">
-        <a href="index.html">首页</a>
-        <a href="plate96.html" class="active">96孔板</a>
-        <a href="plate96-analyze.html">Excel 分析</a>
-      </nav>
+<body class="tool-page plate-page">
+  <section class="cinematic-shell">
+    <video class="scene-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+    <header class="site-header">
+      <div class="container">
+        <a href="index.html" class="logo" aria-label="LabTools 首页">
+          LabTools<sup>LAB</sup>
+        </a>
+        <a href="index.html" class="back-home">← 返回首页</a>
+      </div>
+    </header>
+    <div class="container cinematic-copy">
+      <p class="eyebrow">Plate planning</p>
+      <h1>先把每一个孔，<br>安排得明明白白。</h1>
+      <p>规划样品、标准品、空白与对照；所有标记自动保存在当前浏览器。</p>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
-    <section class="page-head">
-      <h1>96 孔板标记</h1>
-      <p class="sub">点击孔位即可标记内容，数据自动保存在浏览器本地。多块板可分别命名管理。</p>
-    </section>
+  <main class="container tool-workspace plate-workspace">
 
     <div class="plate-toolbar">
       <div class="plate-select">
@@ -56,7 +57,7 @@
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer tool-footer">
     <div class="container">LabTools · 本地数据仅保存在浏览器中</div>
   </footer>
 
