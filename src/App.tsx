@@ -1,16 +1,12 @@
+import { ArrowRight, ChartNoAxesCombined, FlaskConical } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
-const navItems: ReadonlyArray<{
-  label: string;
-  href: string;
-  active?: boolean;
-}> = [
-  { label: "Home", href: "#home", active: true },
-  { label: "Studio", href: "plate96.html" },
-  { label: "About", href: "#about" },
-  { label: "Journal", href: "plate96-analyze.html" },
-  { label: "Reach Us", href: "#contact" },
-];
+const navItems = [
+  { label: "首页", href: "#home", active: true },
+  { label: "96 孔板标记", href: "plate96.html", active: false },
+  { label: "Excel 数据分析", href: "plate96-analyze.html", active: false },
+] as const;
 
 function App() {
   return (
@@ -35,15 +31,15 @@ function App() {
 
       <header className="relative z-10 w-full">
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between px-8 py-6"
-          aria-label="Primary navigation"
+          className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 sm:py-6"
+          aria-label="主导航"
         >
           <a
             href="#home"
             className="font-display text-3xl tracking-tight text-foreground"
-            aria-label="Velorah home"
+            aria-label="LabTools 首页"
           >
-            Velorah<sup className="text-xs">®</sup>
+            LabTools<sup className="ml-1 font-sans text-[10px] font-medium tracking-widest">LAB</sup>
           </a>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -66,38 +62,74 @@ function App() {
           <Button
             asChild
             variant="ghost"
-            className="liquid-glass h-auto rounded-full px-6 py-2.5 text-sm text-foreground transition-transform duration-300 hover:scale-[1.03] hover:bg-transparent"
+            className="liquid-glass h-auto rounded-full px-5 py-2.5 text-sm text-foreground transition-transform duration-300 hover:scale-[1.03] hover:bg-transparent sm:px-6"
           >
-            <a href="plate96-analyze.html">Begin Journey</a>
+            <a href="#tools">选择工具</a>
           </Button>
         </nav>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-40 pt-32 text-center md:py-[90px]">
-        <h1
-          className="animate-fade-rise max-w-7xl text-5xl font-normal leading-[0.95] tracking-[-2.46px] text-foreground sm:text-7xl md:text-8xl"
-          style={{ fontFamily: "'Instrument Serif', serif" }}
-        >
-          Where <em className="not-italic text-muted-foreground">dreams</em> rise
-          <br className="hidden sm:block" />{" "}
-          <em className="not-italic text-muted-foreground">
-            through the silence.
-          </em>
-        </h1>
-
-        <p className="animate-fade-rise-delay mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          We&apos;re designing tools for deep thinkers, bold creators, and quiet
-          rebels. Amid the chaos, we build digital spaces for sharp focus and
-          inspired work.
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-10 pt-14 text-center sm:px-6 sm:pb-16 sm:pt-20 md:py-[72px]">
+        <p className="animate-fade-rise mb-5 text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground sm:text-sm">
+          Biological research utilities
         </p>
 
-        <Button
-          asChild
-          variant="ghost"
-          className="liquid-glass animate-fade-rise-delay-2 mt-12 h-auto cursor-pointer rounded-full px-14 py-5 text-base text-foreground transition-transform duration-300 hover:scale-[1.03] hover:bg-transparent"
+        <h1
+          className="animate-fade-rise max-w-6xl text-5xl font-normal leading-[0.95] tracking-[-2px] text-foreground sm:text-7xl md:text-8xl md:tracking-[-2.46px]"
+          style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          <a href="plate96-analyze.html">Begin Journey</a>
-        </Button>
+          让实验记录
+          <br />
+          <em className="not-italic text-muted-foreground">简单、清晰。</em>
+        </h1>
+
+        <p className="animate-fade-rise-delay mt-7 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg">
+          为日常生物实验设计的轻量在线工具。标记 96 孔板、分析多时间点吸光度数据，
+          所有数据只在你的浏览器本地处理，不上传服务器。
+        </p>
+
+        <div
+          id="tools"
+          className="animate-fade-rise-delay-2 mt-9 grid w-full max-w-3xl gap-3 sm:mt-11 sm:grid-cols-2 sm:gap-4"
+        >
+          <a
+            href="plate96.html"
+            className="group flex min-h-28 items-center gap-4 rounded-2xl bg-foreground px-5 py-5 text-left text-primary-foreground shadow-2xl transition-transform duration-300 hover:scale-[1.02] sm:min-h-32 sm:px-6"
+          >
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-black/10">
+              <FlaskConical className="size-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium uppercase tracking-[0.16em] text-black/50">
+                Plate planner
+              </span>
+              <span className="mt-1 block text-lg font-medium">96 孔板标记</span>
+              <span className="mt-1 block text-xs text-black/55">规划样品、标准品、空白与对照</span>
+            </span>
+            <ArrowRight className="size-5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </a>
+
+          <a
+            href="plate96-analyze.html"
+            className="liquid-glass group flex min-h-28 items-center gap-4 rounded-2xl bg-[#002e42]/70 px-5 py-5 text-left text-foreground shadow-2xl transition-transform duration-300 hover:scale-[1.02] sm:min-h-32 sm:px-6"
+          >
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10">
+              <ChartNoAxesCombined className="size-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Data analysis
+              </span>
+              <span className="mt-1 block text-lg font-medium">Excel 数据分析</span>
+              <span className="mt-1 block text-xs text-muted-foreground">生成热图、变化曲线与分析工作簿</span>
+            </span>
+            <ArrowRight className="size-5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </a>
+        </div>
+
+        <p className="animate-fade-rise-delay-2 mt-5 text-xs text-white/45">
+          免费 · 开源 · 无需安装
+        </p>
       </main>
     </div>
   );
