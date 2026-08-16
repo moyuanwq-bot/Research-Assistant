@@ -506,6 +506,91 @@ body.dragging .well {
   font-size: 13px;
 }
 
+/* ---------- Excel 分析页 ---------- */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px 26px;
+  margin: 0 0 22px;
+}
+
+.panel h2 { margin: 0 0 14px; font-size: 19px; }
+
+.panel h3 { margin: 0 0 8px; font-size: 15px; }
+
+.dropzone {
+  border: 2px dashed #bfe0e2;
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+  padding: 34px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+
+.dropzone:hover, .dropzone.dragover { background: #d3eaec; border-color: var(--brand); }
+
+.drop-title { margin: 0 0 4px; font-size: 16px; font-weight: 600; color: var(--ink); }
+
+.notice { margin: 14px 0 0; padding: 10px 14px; background: var(--brand-soft); border-radius: 10px; color: var(--brand); font-size: 13px; }
+.notice-err { background: #fbe9e9; color: #c0392b; }
+
+.config-row { display: flex; flex-wrap: wrap; gap: 18px; margin: 0 0 18px; }
+
+.field-inline { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-soft); }
+
+.field-inline input[type="text"],
+.field-inline input[type="number"],
+.field-inline select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  outline: none;
+  width: 92px;
+}
+
+.field-inline input:focus, .field-inline select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+
+.table-wrap { overflow-x: auto; margin: 0 0 18px; }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th, .data-table td { border-bottom: 1px solid var(--line); padding: 9px 12px; text-align: left; }
+.data-table th { color: var(--ink-soft); font-size: 13px; }
+.data-table tr:last-child td { border-bottom: none; }
+
+.time-input { width: 110px; font-family: inherit; font-size: 14px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); outline: none; }
+.time-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.unit-inline { margin-left: 6px; color: var(--ink-soft); font-size: 13px; }
+
+.status-ok { color: #2e8b57; }
+.status-warn { color: #c07a1f; }
+
+.summary { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 12px 16px; background: var(--brand-soft); border: 1px solid #bfe0e2; border-radius: 12px; font-size: 14px; margin: 0 0 20px; }
+.summary b { color: var(--brand); font-size: 16px; }
+.summary-warn { flex-basis: 100%; margin: 6px 0 0; padding: 0 0 0 18px; color: #c07a1f; font-size: 13px; }
+
+.chart-block { margin: 0 0 22px; }
+.chart-block-head { display: flex; align-items: center; gap: 16px; margin: 0 0 10px; }
+.chart-block-head h3 { margin: 0; }
+.chart-canvas-wrap { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.chart-canvas-wrap canvas { display: block; }
+.line-wrap { height: 340px; }
+.line-wrap canvas { width: 100%; height: 100%; display: block; }
+
+.well-select-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 14px; }
+.well-select-tools .selection-info { font-weight: 700; color: var(--brand); margin-right: auto; font-size: 14px; }
+.well-select-tools .btn { padding: 7px 13px; }
+
+.well.anomaly { background: repeating-linear-gradient(45deg, #f3f3f3, #f3f3f3 4px, #e7e7e7 4px, #e7e7e7 8px); border-style: dashed; border-color: #c9c9c9; }
+
+.actions { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+.hint { color: var(--ink-soft); font-size: 13px; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   .plate { grid-template-columns: 24px repeat(12, 1fr); gap: 4px; }

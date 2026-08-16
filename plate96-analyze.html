@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>96 孔板 Excel 分析 · LabTools</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230e7a8a'/><circle cx='16' cy='16' r='6' fill='white'/></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-mark"><span></span><span></span><span></span><span></span></span>
+        LabTools
+      </a>
+      <nav class="site-nav">
+        <a href="index.html">首页</a>
+        <a href="plate96.html">96孔板</a>
+        <a href="plate96-analyze.html" class="active">Excel 分析</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="page-head">
+      <h1>96 孔板 Excel 分析</h1>
+      <p class="sub">导入多时间点吸光度 Excel，自动识别 8×12 数据区，生成热图与变化曲线并导出分析工作簿。数据全部在浏览器本地处理，不上传。</p>
+    </section>
+
+    <!-- Step 1: 导入 -->
+    <section class="panel" id="importPanel">
+      <h2>1 · 导入 Excel</h2>
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm,.csv" hidden>
+        <p class="drop-title">点击选择，或把 Excel 拖到这里</p>
+        <p class="hint">支持 .xlsx / .xls / .csv，每个工作表视为一个时间点</p>
+      </div>
+      <p class="notice" id="importMsg" hidden></p>
+    </section>
+
+    <!-- Step 2: 识别与参数 -->
+    <section class="panel" id="configPanel" hidden>
+      <h2>2 · 识别与参数</h2>
+      <div class="config-row">
+        <label class="field-inline">
+          检测波长
+          <input type="text" id="wavelength" value="450" inputmode="decimal" placeholder="450">
+          nm
+        </label>
+        <label class="field-inline">
+          时间单位
+          <select id="timeUnit">
+            <option value="h">小时</option>
+            <option value="min">分钟</option>
+            <option value="d">天</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table" id="sheetTable">
+          <thead>
+            <tr>
+              <th>工作表</th>
+              <th>时间（<span class="unit-label">小时</span>）</th>
+              <th>识别状态</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="parseBtn">解析并预览</button>
+      </div>
+    </section>
+
+    <!-- Step 3: 孔位选择与预览 -->
+    <section class="panel" id="previewPanel" hidden>
+      <h2>3 · 孔位选择与预览</h2>
+
+      <div class="summary" id="summary"></div>
+
+      <div class="chart-block">
+        <div class="chart-block-head">
+          <h3>热图预览</h3>
+          <label class="field-inline">
+            时间点
+            <select id="heatmapTimeSelect"></select>
+          </label>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="heatmapCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-block">
+        <div class="chart-block-head">
+          <h3>变化曲线（选中孔位）</h3>
+          <span class="hint" id="lineHint">请在下方的孔板中选择要绘图的孔位</span>
+        </div>
+        <div class="chart-canvas-wrap line-wrap">
+          <canvas id="lineCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="well-select-tools">
+        <span class="selection-info" id="wellSelInfo">已选 0 个孔</span>
+        <button class="btn ghost" id="selectAllBtn">全选</button>
+        <button class="btn ghost" id="clearSelBtn">清空</button>
+        <button class="btn ghost" id="selectRowsBtn">按行选择</button>
+        <button class="btn ghost" id="selectColsBtn">按列选择</button>
+      </div>
+      <div class="plate-wrap">
+        <div class="plate" id="wellGrid"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="exportBtn">导出分析工作簿</button>
+        <span class="hint" id="exportMsg"></span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">LabTools · 本地数据仅保存在浏览器中 · 解析与导出均在本地完成</div>
+  </footer>
+
+  <script src="js/vendor/xlsx.full.min.js"></script>
+  <script src="js/vendor/chart.umd.js"></script>
+  <script src="js/vendor/exceljs.min.js"></script>
+  <script src="js/excel96.js"></script>
+</body>
+</html>
