@@ -1,0 +1,372 @@
+<!-- AI生成 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生化实验分析 · LabTools</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230e7a8a'/><circle cx='16' cy='16' r='6' fill='white'/></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="tool-page bioassay-page">
+  <section class="cinematic-shell">
+    <video class="scene-video" autoplay loop muted playsinline preload="auto" aria-hidden="true">
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+    <header class="site-header">
+      <div class="container">
+        <a href="index.html" class="logo" aria-label="LabTools 首页">
+          LabTools<sup>LAB</sup>
+        </a>
+        <a href="index.html" class="back-home">← 返回首页</a>
+      </div>
+    </header>
+    <div class="container cinematic-copy">
+      <p class="eyebrow">Bioassay analyzer</p>
+      <h1>从读数到结论，<br>一步到位。</h1>
+      <p>标准曲线拟合、酶动力学分析、蛋白浓度测定、统计检验与作图、溶液配制计算——生化实验常用分析，一站完成。</p>
+    </div>
+  </section>
+
+  <main class="container tool-workspace bioassay-workspace">
+
+    <!-- Module Tabs -->
+    <nav class="module-tabs" id="moduleTabs">
+      <button class="module-tab active" data-module="curve">标准曲线拟合</button>
+      <button class="module-tab" data-module="kinetics">酶动力学分析</button>
+      <button class="module-tab" data-module="protein">蛋白浓度测定</button>
+      <button class="module-tab" data-module="stats">统计分析作图</button>
+      <button class="module-tab" data-module="solution">溶液配制计算</button>
+    </nav>
+
+    <!-- ===== Module 1: Standard Curve Fitting ===== -->
+    <section class="module-panel active" id="module-curve">
+      <div class="module-grid">
+        <div class="module-input">
+          <h2><span class="step-number">01</span><span>标准曲线拟合</span></h2>
+          <div class="form-field">
+            <label>拟合模型</label>
+            <select id="curveModel" class="full-select">
+              <option value="linear">线性回归 (y = ax + b)</option>
+              <option value="pl4">四参数逻辑回归 (4PL)</option>
+              <option value="poly2">二次多项式 (y = ax² + bx + c)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>标准品数据（浓度, OD值），每行一对</label>
+            <textarea id="curveStdData" rows="8" class="data-textarea" placeholder="0, 0.05&#10;10, 0.18&#10;20, 0.35&#10;40, 0.68&#10;80, 1.25&#10;160, 2.10"></textarea>
+          </div>
+          <div class="form-field">
+            <label>未知样品 OD 值（每行一个）</label>
+            <textarea id="curveUnknownData" rows="4" class="data-textarea" placeholder="0.45&#10;0.82&#10;1.15"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn" id="curveFitBtn">拟合曲线</button>
+            <button class="btn ghost" id="curveClearBtn">清空</button>
+          </div>
+        </div>
+        <div class="module-result">
+          <div class="chart-block">
+            <div class="chart-block-head"><h3>标准曲线</h3></div>
+            <div class="chart-canvas-wrap line-wrap">
+              <canvas id="curveChart"></canvas>
+            </div>
+          </div>
+          <div class="result-table-wrap" id="curveResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Module 2: Enzyme Kinetics ===== -->
+    <section class="module-panel" id="module-kinetics">
+      <div class="module-grid">
+        <div class="module-input">
+          <h2><span class="step-number">02</span><span>酶动力学分析</span></h2>
+          <div class="form-field">
+            <label>作图方式</label>
+            <select id="kineticsPlotType" class="full-select">
+              <option value="mm">Michaelis-Menten 直接拟合</option>
+              <option value="lb">Lineweaver-Burk 双倒数</option>
+              <option value="eh">Eadie-Hofstee 作图</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>底物浓度 [S] 与反应速率 V（每行一对）</label>
+            <textarea id="kineticsData" rows="8" class="data-textarea" placeholder="0.5, 12&#10;1, 20&#10;2, 30&#10;5, 42&#10;10, 48&#10;20, 52"></textarea>
+          </div>
+          <div class="form-field">
+            <label>酶浓度（μM，用于计算 kcat，可选）</label>
+            <input type="text" id="kineticsEnzConc" placeholder="如：0.1" inputmode="decimal">
+          </div>
+          <div class="actions">
+            <button class="btn" id="kineticsFitBtn">拟合分析</button>
+            <button class="btn ghost" id="kineticsClearBtn">清空</button>
+          </div>
+        </div>
+        <div class="module-result">
+          <div class="chart-block">
+            <div class="chart-block-head"><h3 id="kineticsChartTitle">Michaelis-Menten 拟合</h3></div>
+            <div class="chart-canvas-wrap line-wrap">
+              <canvas id="kineticsChart"></canvas>
+            </div>
+          </div>
+          <div class="result-table-wrap" id="kineticsResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Module 3: Protein Concentration ===== -->
+    <section class="module-panel" id="module-protein">
+      <div class="module-grid">
+        <div class="module-input">
+          <h2><span class="step-number">03</span><span>蛋白浓度测定</span></h2>
+          <div class="form-field">
+            <label>测定方法</label>
+            <select id="proteinMethod" class="full-select">
+              <option value="bca">BCA 法 (A562)</option>
+              <option value="bradford">Bradford 法 (A595)</option>
+              <option value="uv280">UV 吸收法 (A280)</option>
+            </select>
+          </div>
+          <div id="proteinStdSection">
+            <div class="form-field">
+              <label>标准品数据（浓度, 吸光度），每行一对</label>
+              <textarea id="proteinStdData" rows="6" class="data-textarea" placeholder="0, 0.05&#10;25, 0.15&#10;50, 0.28&#10;100, 0.52&#10;200, 1.05"></textarea>
+            </div>
+          </div>
+          <div id="proteinUVSection" hidden>
+            <div class="form-field">
+              <label>蛋白类型 / 消光系数</label>
+              <select id="proteinUVType" class="full-select">
+                <option value="custom">自定义消光系数</option>
+                <option value="bsa">BSA (ε = 43,824 M⁻¹cm⁻¹, MW=66,430)</option>
+                <option value="igg">IgG (ε = 210,000 M⁻¹cm⁻¹, MW=150,000)</option>
+                <option value="lysozyme">Lysozyme (ε = 37,890 M⁻¹cm⁻¹, MW=14,300)</option>
+                <option value="ovalbumin">Ovalbumin (ε = 30,100 M⁻¹cm⁻¹, MW=42,700)</option>
+              </select>
+            </div>
+            <div class="form-field" id="proteinEpsField">
+              <label>消光系数 ε (M⁻¹cm⁻¹)</label>
+              <input type="text" id="proteinEpsilon" placeholder="如：43824" inputmode="decimal">
+            </div>
+            <div class="form-field">
+              <label>分子量 (Da)</label>
+              <input type="text" id="proteinMW" placeholder="如：66430" inputmode="decimal">
+            </div>
+          </div>
+          <div class="form-field">
+            <label>样品吸光度值（每行一个）</label>
+            <textarea id="proteinSampleData" rows="4" class="data-textarea" placeholder="0.35&#10;0.68&#10;0.92"></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn" id="proteinCalcBtn">计算浓度</button>
+            <button class="btn ghost" id="proteinClearBtn">清空</button>
+          </div>
+        </div>
+        <div class="module-result">
+          <div class="chart-block" id="proteinChartBlock">
+            <div class="chart-block-head"><h3>标准曲线</h3></div>
+            <div class="chart-canvas-wrap line-wrap">
+              <canvas id="proteinChart"></canvas>
+            </div>
+          </div>
+          <div class="result-table-wrap" id="proteinResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Module 4: Statistics & Plotting ===== -->
+    <section class="module-panel" id="module-stats">
+      <div class="module-grid">
+        <div class="module-input">
+          <h2><span class="step-number">04</span><span>统计分析与作图</span></h2>
+          <div class="form-field">
+            <label>图表类型</label>
+            <select id="statsChartType" class="full-select">
+              <option value="bar">柱状图 + 误差棒</option>
+              <option value="scatter">散点图 + 回归线</option>
+              <option value="box">箱线图 (Box plot)</option>
+              <option value="line">折线图（时间序列）</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>误差棒类型</label>
+            <select id="statsErrorType" class="full-select">
+              <option value="sd">标准差 (SD)</option>
+              <option value="sem">标准误 (SEM)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>数据输入（组名: 数值1, 数值2, ...）</label>
+            <textarea id="statsData" rows="8" class="data-textarea" placeholder="对照组: 1.2, 1.5, 1.3, 1.4, 1.6&#10;实验组A: 2.1, 2.3, 2.0, 2.5, 2.2&#10;实验组B: 3.1, 3.5, 3.0, 3.3, 3.8"></textarea>
+          </div>
+          <div class="form-field">
+            <label>统计检验</label>
+            <select id="statsTestType" class="full-select">
+              <option value="none">仅描述性统计</option>
+              <option value="ttest-paired">配对 t 检验（前两组）</option>
+              <option value="ttest-unpaired">非配对 t 检验（前两组）</option>
+              <option value="anova">单因素方差分析 (ANOVA)</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button class="btn" id="statsAnalyzeBtn">分析并作图</button>
+            <button class="btn ghost" id="statsClearBtn">清空</button>
+            <button class="btn ghost" id="statsExportBtn">导出图表</button>
+          </div>
+        </div>
+        <div class="module-result">
+          <div class="chart-block">
+            <div class="chart-block-head"><h3 id="statsChartTitle">统计图表</h3></div>
+            <div class="chart-canvas-wrap line-wrap">
+              <canvas id="statsChart"></canvas>
+            </div>
+          </div>
+          <div class="result-table-wrap" id="statsResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Module 5: Solution Preparation ===== -->
+    <section class="module-panel" id="module-solution">
+      <div class="module-grid">
+        <div class="module-input">
+          <h2><span class="step-number">05</span><span>溶液配制计算器</span></h2>
+          <div class="form-field">
+            <label>计算模式</label>
+            <select id="solMode" class="full-select">
+              <option value="dilution">稀释计算 (C₁V₁ = C₂V₂)</option>
+              <option value="serial">系列稀释生成</option>
+              <option value="buffer">缓冲液配方</option>
+              <option value="mw">分子量计算</option>
+            </select>
+          </div>
+
+          <!-- Dilution Calculator -->
+          <div class="sol-subpanel" id="sol-dilution">
+            <div class="form-row">
+              <div class="form-field">
+                <label>初始浓度 C₁</label>
+                <input type="text" id="dilC1" placeholder="如：100" inputmode="decimal">
+              </div>
+              <div class="form-field">
+                <label>目标浓度 C₂</label>
+                <input type="text" id="dilC2" placeholder="如：10" inputmode="decimal">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>目标体积 V₂ (mL)</label>
+                <input type="text" id="dilV2" placeholder="如：50" inputmode="decimal">
+              </div>
+              <div class="form-field">
+                <label>浓度单位</label>
+                <select id="dilUnit" class="full-select">
+                  <option value="mM">mM</option>
+                  <option value="uM">μM</option>
+                  <option value="M">M</option>
+                  <option value="mg/mL">mg/mL</option>
+                  <option value="ug/mL">μg/mL</option>
+                </select>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="dilCalcBtn">计算</button>
+            </div>
+          </div>
+
+          <!-- Serial Dilution -->
+          <div class="sol-subpanel" id="sol-serial" hidden>
+            <div class="form-row">
+              <div class="form-field">
+                <label>起始浓度</label>
+                <input type="text" id="serStart" placeholder="如：1000" inputmode="decimal">
+              </div>
+              <div class="form-field">
+                <label>稀释倍数</label>
+                <input type="text" id="serFactor" placeholder="如：2" inputmode="decimal">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>稀释步数</label>
+                <input type="text" id="serSteps" placeholder="如：8" inputmode="decimal">
+              </div>
+              <div class="form-field">
+                <label>每步体积 (μL)</label>
+                <input type="text" id="serVol" placeholder="如：100" inputmode="decimal">
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="serCalcBtn">生成方案</button>
+            </div>
+          </div>
+
+          <!-- Buffer Recipe -->
+          <div class="sol-subpanel" id="sol-buffer" hidden>
+            <div class="form-field">
+              <label>缓冲液类型</label>
+              <select id="bufType" class="full-select">
+                <option value="pbs">PBS (磷酸盐缓冲液)</option>
+                <option value="tbs">TBS (Tris 缓冲盐溶液)</option>
+                <option value="tris">Tris-HCl 缓冲液</option>
+                <option value="hepes">HEPES 缓冲液</option>
+                <option value="tbst">TBST (TBS + Tween-20)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>配制体积 (mL)</label>
+              <input type="text" id="bufVol" placeholder="如：500" inputmode="decimal">
+            </div>
+            <div class="form-field">
+              <label>浓度 (mM，仅 Tris/HEPES)</label>
+              <input type="text" id="bufConc" placeholder="如：50" inputmode="decimal">
+            </div>
+            <div class="form-field">
+              <label>pH 值（仅 Tris/HEPES）</label>
+              <input type="text" id="bufPH" placeholder="如：7.4" inputmode="decimal">
+            </div>
+            <div class="actions">
+              <button class="btn" id="bufCalcBtn">计算配方</button>
+            </div>
+          </div>
+
+          <!-- Molecular Weight -->
+          <div class="sol-subpanel" id="sol-mw" hidden>
+            <div class="form-field">
+              <label>输入类型</label>
+              <select id="mwType" class="full-select">
+                <option value="aa">氨基酸序列（单字母）</option>
+                <option value="formula">化学式（如 C6H12O6）</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>序列 / 化学式</label>
+              <textarea id="mwInput" rows="3" class="data-textarea" placeholder="如：MKWVTFISLLFLFSSAYS"></textarea>
+            </div>
+            <div class="actions">
+              <button class="btn" id="mwCalcBtn">计算分子量</button>
+            </div>
+          </div>
+        </div>
+        <div class="module-result">
+          <div class="result-table-wrap" id="solResult"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer tool-footer">
+    <div class="container">LabTools · 本地数据仅保存在浏览器中 · 所有计算均在本地完成</div>
+  </footer>
+
+  <script src="js/vendor/chart.umd.js"></script>
+  <script src="js/bioassay-curve.js"></script>
+  <script src="js/bioassay-kinetics.js"></script>
+  <script src="js/bioassay-protein.js"></script>
+  <script src="js/bioassay-stats.js"></script>
+  <script src="js/bioassay-solution.js"></script>
+  <script src="js/bioassay.js"></script>
+</body>
+</html>

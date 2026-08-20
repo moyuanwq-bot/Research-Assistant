@@ -1,4 +1,5 @@
-import { ArrowRight, ChartNoAxesCombined, FlaskConical } from "lucide-react";
+// AI生成
+import { ArrowRight, ChartNoAxesCombined, FlaskConical, Microscope } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -82,8 +83,8 @@ function App() {
         </h1>
 
         <p className="animate-fade-rise-delay mt-7 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg">
-          为日常生物实验设计的轻量在线工具。标记 96 孔板、分析多时间点吸光度数据，
-          所有数据只在你的浏览器本地处理，不上传服务器。
+          为日常生物实验设计的轻量在线工具。标记 96 孔板、分析吸光度数据、拟合标准曲线、
+          计算酶动力学参数，所有数据只在你的浏览器本地处理，不上传服务器。
         </p>
 
         <div
@@ -120,6 +121,23 @@ function App() {
               </span>
               <span className="mt-1 block text-lg font-medium">Excel 数据分析</span>
               <span className="mt-1 block text-xs text-muted-foreground">生成热图、变化曲线与分析工作簿</span>
+            </span>
+            <ArrowRight className="size-5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </a>
+
+          <a
+            href="bioassay.html"
+            className="group flex min-h-28 items-center gap-4 rounded-2xl bg-foreground px-5 py-5 text-left text-primary-foreground shadow-2xl transition-transform duration-300 hover:scale-[1.02] sm:min-h-32 sm:px-6"
+          >
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-black/10">
+              <Microscope className="size-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs font-medium uppercase tracking-[0.16em] text-black/50">
+                Bioassay analyzer
+              </span>
+              <span className="mt-1 block text-lg font-medium">生化实验分析</span>
+              <span className="mt-1 block text-xs text-black/55">标准曲线拟合、酶动力学、统计作图、溶液配制</span>
             </span>
             <ArrowRight className="size-5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </a>
