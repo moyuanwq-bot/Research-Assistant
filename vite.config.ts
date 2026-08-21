@@ -1,3 +1,4 @@
+// AI生成
 import { cpSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
@@ -46,6 +47,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         plate96: resolve(__dirname, "plate96.html"),
         "plate96-analyze": resolve(__dirname, "plate96-analyze.html"),
+        bioassay: resolve(__dirname, "bioassay.html"),
       },
     },
   },
